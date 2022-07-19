@@ -4,7 +4,7 @@ key_left = keyboard_check(ord("A")) || keyboard_check(vk_left);
 key_right = keyboard_check(ord("D")) || keyboard_check(vk_right);
 key_jump = keyboard_check(vk_space) || keyboard_check(ord("Z")) || keyboard_check(ord("P"));
 key_jump_released = keyboard_check_released(vk_space) || keyboard_check_released(ord("Z")) || keyboard_check_released(ord("P"));
-key_shoot = keyboard_check(vk_lshift) || keyboard_check(ord("X")) || keyboard_check(ord("O"));
+key_shoot = keyboard_check_pressed(vk_lshift) || keyboard_check_pressed(ord("X")) || keyboard_check_pressed(ord("O"));
 key_shoot_released = keyboard_check_released(vk_lshift) || keyboard_check_released(ord("X")) || keyboard_check_released(ord("O"));
 
 if (key_left) || (key_right) || (key_jump) || (key_shoot)
@@ -37,7 +37,7 @@ if (gamepad_button_check_released(0,gp_face1) || gamepad_button_check_released(4
 	global.controller = 1;
 }
 
-if (gamepad_button_check(0,gp_face3) || gamepad_button_check(0,gp_face2) || gamepad_button_check(4,gp_face3) || gamepad_button_check(4,gp_face2))
+if (gamepad_button_check_pressed(0,gp_face3) || gamepad_button_check_pressed(0,gp_face2) || gamepad_button_check_pressed(4,gp_face3) || gamepad_button_check_pressed(4,gp_face2))
 {
 	key_shoot = 1;
 	global.controller = 1;
@@ -145,21 +145,36 @@ if (place_meeting(x,y+vsp,oWall))
 }
 y = y + vsp;
 
-
-// Animation
-if (airborne)
+// Shoot
+if (key_shoot)
 {
-	if (sign(vsp) > 0) sprite_index = sPlayerJumpUp; else image_index = sPlayerJumpDown;
-}
-else 
-{
-	if (sign(hsp) == 0)
+	bullet = instance_create_layer(x+2,y+3,"Bullets",oBullet);
+	if(image_xscale == 1)
 	{
-		sprite_index = sPlayer;
+		bullet.xdir = 1;
 	}
 	else
 	{
+		bullet.xdir = -1;	
+	}
+	audio_play_sound(snd_Shoot,5,false);
+}
+
+// Animation
+if(airborne)
+{
+	if (vsp <= 0) sprite_index = sPlayerJumpUp;
+	if (vsp > 0) sprite_index = sPlayerJumpDown;
+}
+else
+{
+	if (hsp != 0)
+	{
 		sprite_index = sPlayerRun;
+	}
+	else
+	{
+		sprite_index = sPlayer;
 	}
 }
 

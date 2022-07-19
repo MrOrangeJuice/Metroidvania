@@ -2,7 +2,7 @@
 
 hsp = 0;
 vsp = 0;
-grv = 0.3;
+grv = 0.2;
 walksp = 2;
 currentwalksp = 0;
 canJump = true;
