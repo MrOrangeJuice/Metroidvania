@@ -8,3 +8,5 @@ currentwalksp = 0;
 canJump = true;
 jumpBuffer = 0;
 airborne = false;
+swordMode = false;
+swordTimerSet = false;

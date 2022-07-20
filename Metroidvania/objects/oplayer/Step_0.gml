@@ -49,133 +49,167 @@ if (gamepad_button_check_released(0,gp_face3) || gamepad_button_check_released(0
 	global.controller = 1;
 }
 
-// If player doesn't release jump, they can't jump again
-if(key_jump_released)
-{
-	canJump = true;
-}
+if(!swordMode)
+{	
+	// If player doesn't release jump, they can't jump again
+	if(key_jump_released)
+	{
+		canJump = true;
+	}
 
-// Build up speed depending on inputs
-if(key_left && !key_right)
-{
-	currentwalksp -= 0.25;
-	if(currentwalksp < (-walksp - 0.5))
-	{
-		currentwalksp += 0.5;
-	}
-	else if(currentwalksp < -walksp)
-	{
-		currentwalksp += 0.25;
-	}
-}
-if(key_right && !key_left)
-{
-	currentwalksp += 0.25;
-	if(currentwalksp > (walksp + 0.5))
-	{
-		currentwalksp -= 0.5;
-	}
-	else if(currentwalksp > walksp)
+	// Build up speed depending on inputs
+	if(key_left && !key_right)
 	{
 		currentwalksp -= 0.25;
+		if(currentwalksp < (-walksp - 0.5))
+		{
+			currentwalksp += 0.5;
+		}
+		else if(currentwalksp < -walksp)
+		{
+			currentwalksp += 0.25;
+		}
 	}
-}
-// Slow down if not moving
-if (!(key_left || key_right) || (key_left && key_right))
-{
-	if(currentwalksp < 0)
+	if(key_right && !key_left)
 	{
 		currentwalksp += 0.25;
+		if(currentwalksp > (walksp + 0.5))
+		{
+			currentwalksp -= 0.5;
+		}
+		else if(currentwalksp > walksp)
+		{
+			currentwalksp -= 0.25;
+		}
 	}
-	if(currentwalksp > 0)
+	// Slow down if not moving
+	if (!(key_left || key_right) || (key_left && key_right))
 	{
-		currentwalksp -= 0.25;
+		if(currentwalksp < 0)
+		{
+			currentwalksp += 0.25;
+		}
+		if(currentwalksp > 0)
+		{
+			currentwalksp -= 0.25;
+		}
 	}
-}
 	
-hsp = currentwalksp;
-vsp = vsp + grv;
+	hsp = currentwalksp;
+	vsp = vsp + grv;
 
-// Decrement jump buffer
-jumpBuffer--;
+	// Decrement jump buffer
+	jumpBuffer--;
 	
-// Check if player is airborne
-if(!place_meeting(x, y + 1, oWall))
-{
-	airborne = true;	
-}
-else
-{
-	airborne = false;	
-	jumpBuffer = 5;
-}
-
-if (jumpBuffer > 0) && (key_jump) && (canJump)
-{
-	vsp = -4;
-	audio_play_sound(snd_Jump, 5, false);
-	canJump = false;
-}
-
-// Variable jump height
-if vsp < 0 && (!(key_jump)) //if you're moving upwards in the air but not holding down jump
-{
-	vsp *= 0.85; //essentially, divide your vertical speed
-}
-
-// Horizontal Collision
-if (place_meeting(x+hsp,y,oWall))
-{
-	while (!place_meeting(x+sign(hsp),y,oWall))
+	// Check if player is airborne
+	if(!place_meeting(x, y + 1, oWall))
 	{
-		x = x + sign(hsp);
-	}
-	hsp = 0;
-}
-x = x + hsp;
-
-// Vertical Collision
-if (place_meeting(x,y+vsp,oWall))
-{
-	while (!place_meeting(x,y+sign(vsp),oWall))
-	{
-		y = y + sign(vsp);
-	}
-	vsp = 0;
-}
-y = y + vsp;
-
-// Shoot
-if (key_shoot)
-{
-	bullet = instance_create_layer(x+2,y+3,"Bullets",oBullet);
-	if(image_xscale == 1)
-	{
-		bullet.xdir = 1;
+		airborne = true;	
 	}
 	else
 	{
-		bullet.xdir = -1;	
+		airborne = false;	
+		jumpBuffer = 5;
 	}
-	audio_play_sound(snd_Shoot,5,false);
-}
 
-// Animation
-if(airborne)
-{
-	if (vsp <= 0) sprite_index = sPlayerJumpUp;
-	if (vsp > 0) sprite_index = sPlayerJumpDown;
-}
-else
-{
-	if (hsp != 0)
+	if (jumpBuffer > 0) && (key_jump) && (canJump)
 	{
-		sprite_index = sPlayerRun;
+		vsp = -4;
+		audio_play_sound(snd_Jump, 5, false);
+		canJump = false;
+	}
+
+	// Variable jump height
+	if vsp < 0 && (!(key_jump)) //if you're moving upwards in the air but not holding down jump
+	{
+		vsp *= 0.85; //essentially, divide your vertical speed
+	}
+
+	// Horizontal Collision
+	if (place_meeting(x+hsp,y,oWall))
+	{
+		while (!place_meeting(x+sign(hsp),y,oWall))
+		{
+			x = x + sign(hsp);
+		}
+		hsp = 0;
+	}
+	x = x + hsp;
+
+	// Vertical Collision
+	if (place_meeting(x,y+vsp,oWall))
+	{
+		while (!place_meeting(x,y+sign(vsp),oWall))
+		{
+			y = y + sign(vsp);
+		}
+		vsp = 0;
+	}
+	y = y + vsp;
+
+	// Shoot
+	if (key_shoot)
+	{
+		bullet = instance_create_layer(x+2,y+3,"Bullets",oBullet);
+		if(image_xscale == 1)
+		{
+			bullet.xdir = 1;
+		}
+		else
+		{
+			bullet.xdir = -1;	
+		}
+		audio_play_sound(snd_Shoot,5,false);
+		ScreenShake(1,5);
+	}
+
+	// Animation
+	if(airborne)
+	{
+		if (vsp <= 0) sprite_index = sPlayerJumpUp;
+		if (vsp > 0) sprite_index = sPlayerJumpDown;
 	}
 	else
 	{
-		sprite_index = sPlayer;
+		if (hsp != 0)
+		{
+			sprite_index = sPlayerRun;
+		}
+		else
+		{
+			sprite_index = sPlayer;
+		}
+	}
+
+	if (hsp != 0) image_xscale = sign(hsp);
+}
+// If sword is activated
+else
+{
+	sprite_index = sPlayerSword;
+	// Shoot
+	if (key_shoot)
+	{
+		bullet = instance_create_layer(x+2,y+3,"Bullets",oBullet);
+		if(image_xscale == 1)
+		{
+			bullet.xdir = 1;
+		}
+		else
+		{
+			bullet.xdir = -1;	
+		}
+		audio_play_sound(snd_Shoot,5,false);
+		ScreenShake(1,5);
+	}
+	
+	if(!swordTimerSet)
+	{
+		image_index = 0;
+		audio_play_sound(snd_Sword2,5,false);
+		vsp = 0;
+		swordTimerSet = true;
+		alarm[0] = room_speed * 0.4;
+		ScreenShake(4,10);
 	}
 }
-
-if (hsp != 0) image_xscale = sign(hsp);
