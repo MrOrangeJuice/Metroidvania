@@ -150,7 +150,7 @@ if(!swordMode)
 	// Shoot
 	if (key_shoot)
 	{
-		bullet = instance_create_layer(x+2,y+3,"Bullets",oBullet);
+		bullet = instance_create_layer(x+2,y+3.5,"Bullets",oBullet);
 		if(image_xscale == 1)
 		{
 			bullet.xdir = 1;
@@ -190,7 +190,7 @@ else
 	// Shoot
 	if (key_shoot)
 	{
-		bullet = instance_create_layer(x+2,y+3,"Bullets",oBullet);
+		bullet = instance_create_layer(x+2,y+3.5,"Bullets",oBullet);
 		if(image_xscale == 1)
 		{
 			bullet.xdir = 1;

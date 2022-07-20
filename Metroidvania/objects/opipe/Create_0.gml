@@ -1,0 +1,3 @@
+/// @description Init
+
+enemyAlarm = false;
