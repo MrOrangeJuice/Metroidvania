@@ -2,8 +2,8 @@
 
 if(other.hp <= 0)
 {
-	oPlayer.x = other.x + 8;
-	oPlayer.y = other.y + 8;
+	oPlayer.x = other.x;
+	oPlayer.y = other.y;
 	oPlayer.swordMode = true;
 	oPlayer.swordTimerSet = false;
 	audio_play_sound(snd_Hit,5,false);
@@ -11,6 +11,7 @@ if(other.hp <= 0)
 	instance_destroy();
 	instance_destroy(other);
 	audio_play_sound(snd_EnemyDeath,5,false);
+	audio_play_sound(snd_LaserEnemyDeathScream,5,false);
 }
 else
 {
