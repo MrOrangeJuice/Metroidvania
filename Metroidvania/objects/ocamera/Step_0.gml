@@ -30,15 +30,13 @@ shake_remain = max(0,shake_remain-((1/shake_length)*shake_magnitude));
 camera_set_view_pos(cam,x-view_w_half,y-view_h_half);
 
 // Parallax
-/*
 if (layer_exists("Clouds"))
 {
-	layer_x("Clouds",x/10);
-	layer_y("Clouds",y/10);
+	layer_x("Clouds",x/6);
+	layer_y("Clouds",y/6);
 }
-
-if (layer_exists("Hills"))
+if (layer_exists("Stars"))
 {
-	layer_x("Hills",x/8);
-	//layer_y("Hills",y/8 + 320);
+	layer_x("Stars",x/2);
+	layer_y("Stars",y/2);
 }
