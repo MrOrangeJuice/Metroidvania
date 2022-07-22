@@ -49,6 +49,8 @@ if (gamepad_button_check_released(0,gp_face3) || gamepad_button_check_released(0
 	global.controller = 1;
 }
 
+shootTimer--;
+
 if(!swordMode)
 {	
 	// If player doesn't release jump, they can't jump again
@@ -148,8 +150,9 @@ if(!swordMode)
 	y = y + vsp;
 
 	// Shoot
-	if (key_shoot)
+	if (key_shoot && shootTimer <= 0)
 	{
+		shootTimer = shootCooldown;
 		bullet = instance_create_layer(x+2,y+3.5,"Bullets",oBullet);
 		if(image_xscale == 1)
 		{
@@ -188,8 +191,9 @@ else
 {
 	sprite_index = sPlayerSword;
 	// Shoot
-	if (key_shoot)
+	if (key_shoot && shootTimer <= 0)
 	{
+		shootTimer = shootCooldown;
 		bullet = instance_create_layer(x+2,y+3.5,"Bullets",oBullet);
 		if(image_xscale == 1)
 		{

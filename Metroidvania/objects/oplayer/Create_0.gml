@@ -10,3 +10,5 @@ jumpBuffer = 0;
 airborne = false;
 swordMode = false;
 swordTimerSet = false;
+shootTimer = 0;
+shootCooldown = 10;
